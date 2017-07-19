@@ -1,10 +1,19 @@
 {
-  "name": "socket-chat-example",
+  "name": "websocket-notification",
   "version": "0.0.1",
-  "description": "my first socket.io app",
+  "description": "websocket notification library",
+  "private":true,
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:brightvie/webSocketNotification.git"
+  },
+  "license": "MIT",
   "dependencies": {
+    "path": "^0.12.7",
     "body-parser": "^1.17.2",
     "express": "^4.15.3",
     "socket.io": "^2.0.3"
   }
 }
+
+
