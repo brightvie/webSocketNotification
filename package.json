@@ -8,7 +8,7 @@
     "url": "git@github.com:brightvie/webSocketNotification.git"
   },
   "license": "MIT",
-  "main": "src/index.js",
+  "main": "src/server/index.js",
   "dependencies": {
     "path": "^0.12.7",
     "body-parser": "^1.17.2",

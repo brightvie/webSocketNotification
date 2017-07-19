@@ -47,3 +47,4 @@ var BrightVieWebSocketClient = function() {
   };
   this.getInstance = getInstance;
 };
+

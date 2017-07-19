@@ -99,7 +99,7 @@
         client.setOptions(obj);
 
         // WebSocketのコネクションを貼る
-        webSocket = client.getInstance();
+        webSocket = client.getInstance(io);
 
         // サーバからの通知設定を受け取る
         webSocket.on('notification', function(res) {

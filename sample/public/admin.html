@@ -132,7 +132,7 @@
       var client = new BrightVieWebSocketClient();
       client.setOptions(obj);
       // WebSocketのコネクションを貼る
-      var webSocket = client.getInstance();
+      var webSocket = client.getInstance(io);
       // === ここまで共通処理 ===
 
       // === ここからアプリケーションに合わせた処理を記載 ===
@@ -153,11 +153,6 @@
         }
       });
 
-      // サーバからのメッセージを受信する
-      webSocket.on('notification', function(res) {
-        console.log('サーバからのメッセージを受信');
-        console.log(res);
-      });
 
       $('#js-send-message').click(function() {
         console.log('クリック');
