@@ -1,0 +1,21 @@
+{
+  "name": "test",
+  "description": "",
+  "main": "index.js",
+  "authors": [
+    "Ryo Fujiwara <ryo.fujiwara@brightvie.me>"
+  ],
+  "license": "ISC",
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "webSocketNotification": "git@github.com:brightvie/webSocketNotification.git",
+    "jquery-3.2.1.min": "https://code.jquery.com/jquery-3.2.1.min.js"
+  }
+}

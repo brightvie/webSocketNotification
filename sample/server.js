@@ -14,7 +14,7 @@ app.use(bodyParser.json());
 
 
 // ユーザ管理の仕組みの初期化も含めてここで実施
-var WebSocketNotification = require('../src/server/index');
+var WebSocketNotification = require('websocket-notification');
 var webSocketNotification = new WebSocketNotification();
 
 

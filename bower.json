@@ -8,7 +8,9 @@
     "**/.*",
     "node_modules",
     "bower_components",
-    "src/server/*",
+    "package.json",
+    "src/server",
+    "sample",
     "test",
     "tests"
   ],
