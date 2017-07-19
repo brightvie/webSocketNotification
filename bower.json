@@ -10,7 +10,7 @@
     "bower_components",
     "package.json",
     "src/server",
-    "sample",
+    "examples",
     "test",
     "tests"
   ],

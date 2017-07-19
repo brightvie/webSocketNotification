@@ -2,7 +2,7 @@
 node_modules
 bower_components
 src/client
-sample
+examples
 test
 tests
 bower.json
