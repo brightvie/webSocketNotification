@@ -130,7 +130,7 @@ WebSocketサーバに対してAPIでメッセージを呼び出すことが出�
       };
 
       // WebSocket Clientの初期化
-      var client = new BrightVieWebSocketClient();
+      var client = new WebSocketNotificationClient();
       // 任意のパラメータをセットする
       client.setOptions(obj);
       // WebSocketのコネクションを貼る

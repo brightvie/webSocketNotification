@@ -129,7 +129,7 @@
       };
 
       // === ここから共通処理 ===
-      var client = new BrightVieWebSocketClient();
+      var client = new WebSocketNotificationClient();
       client.setOptions(obj);
       // WebSocketのコネクションを貼る
       var webSocket = client.getInstance(io);

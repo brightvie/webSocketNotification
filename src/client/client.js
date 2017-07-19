@@ -2,13 +2,13 @@
  * 必ずこのファイルの読み込み前に下記行を追加お願いします。
  * ```
  * <script src="/socket.io/socket.io.js"></script>
- * var client = new BrightVieWebSocketClient();
+ * var client = new WebSocketNotificationClient();
  * client.setOptions(obj);
  * // WebSocketのコネクションを貼る
  * var webSocket = client.getInstance(io);
  * ```
  */
-var BrightVieWebSocketClient = function() {
+var WebSocketNotificationClient = function() {
   this.loginUser = {
                       systemName: null,
                       userId: null,
