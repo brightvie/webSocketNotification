@@ -22,14 +22,9 @@ WebSocketサーバに対してAPIでメッセージを呼び出すことが出�
 
 ## システム構成図
 
-あとで記載した構成図をここに記載する
+![WebSocketNotification概要図](examples/images/WebSocketNotification概要図.png "WebSocketNotification概要図")
 
-1. WebSocketServer(Nodejs) <--->  3. PHPなどの既存アプリケーション
-   |
-   |
-2. WebSocketClient(JavaScript) <--> 4. AngualarなどのJavaScriptフレームワーク
-
-このライブラリでは、1と2の機能を提供し、既存システムにおいてサーバからクライアントに対して何かを通知し処理を行いたい場合に
+このライブラリでは、図の左側部分の機能を提供し、既存システムにおいてサーバからクライアントに対して何かを通知し処理を行いたい場合に
 効率よく実装できるための仕組みを提供します。
 
 
