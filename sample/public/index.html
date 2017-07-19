@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Client Socket.IO Sample</title>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <style>
+      body {
+        text-align: center;
+        margin: 0 auto;
+      }
+
+      .submit-btn {
+        display: block;
+        width: 80%;
+        height: 30px;
+        margin: 0 auto;
+      }
+
+      input {
+        width: 300px;
+      }
+  </style>
+  </head>
+  <body>
+    <section id="js-setting-view">
+      <h2>接続ユーザの設定</h2>
+        <label>
+          システム名：<input id="js-system-name" type="text" name="defaults" value="careSystem">
+        </label>
+        <label>
+          グループ：<input id="js-groups" type="text" name="groups" value=""  placeholder="unitA, unitB"><br>
+          <span style="color:gray; font-size:10px;">※ ,で区切ると複数件指定することが出来ます。ex) unitA, unitB</span>
+        </label>
+        <label>
+          ユーザID：<input id="js-user-id" type="text" name="userId" value="12345"  placeholder="careSystem">
+        </label>
+      <button id="js-connect" class="btn btn-primary" style="width: 200px;">接続</button>
+    </section>
+
+    <section id="js-result-view" style="display: none;">
+      <h2>接続中のユーザ情報</h2>
+      <table id="js-receive-message" class="table" style="width: 40%; margin: 0 auto;">
+        <tbody>
+          <tr>
+            <th>所属システム</th>
+            <td id="js-system-name-text"></td>
+          </tr>
+          <tr>
+            <th>所属グループ</th>
+            <td id="js-groups-text"></td>
+          </tr>
+          <tr>
+            <th>ユーザID</th>
+            <td id="js-user-id-text"></td>
+          </tr>
+        </tbody>
+      </table>
+      <button id="js-disconnect" class="btn btn-warning" style="width: 200px;">接続解除</button>
+    </section>
+
+    <section id="js-message-view" style="display: none">
+      <h2>メッセージ受信</h2>
+      <table id="js-receive-message" class="table table-striped" style="width: 70%; margin: 0 auto;">
+        <thead>
+          <tr>
+            <th>受信日時</th>
+            <th>送信タイプ</th>
+            <th>内容</th>
+          </tr>
+        </thead>
+        <tbody id="js-receive-message-box"></tbody>
+      </table>
+    </section>
+
+
+
+    <script src="/js/jquery-3.2.1.min.js"></script>
+
+    <!-- Install WebScoket Client -->
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/js/websocket_client.js"></script>
+    <script>
+      var webSocket = null;
+      $('#js-connect').click(function(){
+
+        var systemName = document.querySelector('#js-system-name').value;
+        var userId     = document.querySelector('#js-user-id').value;
+        var _groups    = document.querySelector('#js-groups').value;
+        var groups     = (_groups)?_groups.split(','):[];
+
+        var obj = {
+          systemName: systemName,
+          userId: userId,
+          groups: groups,
+        };
+
+        // ここから共通処理
+        var client = new BrightVieWebSocketClient();
+        client.setOptions(obj);
+
+        // WebSocketのコネクションを貼る
+        webSocket = client.getInstance();
+
+        // サーバからの通知設定を受け取る
+        webSocket.on('notification', function(res) {
+            var json = JSON.stringify(res, null, "    ")
+            console.log(json);
+            var dom = '<tr><td>' + res.sendDate + '</td><td>' + res.sendType + '</td><td><pre>' + json + '</pre></td></tr>';
+          $('#js-receive-message-box').prepend(dom);
+        });
+
+
+        // 画面設定
+        $('#js-setting-view').hide();
+        $('#js-result-view').show();
+        $('#js-message-view').show();
+
+
+        $('#js-system-name-text').text(systemName);
+        $('#js-groups-text').text(_groups);
+        $('#js-user-id-text').text(userId);
+
+
+        return false;
+      });
+
+      document.querySelector('#js-disconnect').addEventListener('click', function(){
+        if (webSocket) {
+          webSocket.disconnect();
+          webSocket = null;
+        }
+        location.reload();
+      });
+    </script>
+  </body>
+</html>

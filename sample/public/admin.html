@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Admin Socket.IO Sample</title>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <style>
+      body {
+        width: 1000px;
+        text-align: center;
+        margin: 0 auto;
+      }
+
+      .submit-btn {
+        display: block;
+        width: 80%;
+        height: 30px;
+        margin: 0 auto;
+      }
+
+      input {
+        width: 80%;
+      }
+  </style>
+  </head>
+  <body>
+
+    <section>
+      <h2>通知設定</h2>
+
+      <div class="row">
+        <div class="span6">
+
+          <h4>送信先の指定</h4>
+          <div class="btn-group" style="margin-bottom: 20px;">
+            <button id="js-target-all" class="js-target btn active">全ユーザ</button>
+            <button id="js-target-systems" class="js-target btn">システム指定</button>
+            <button id="js-target-groups"  class="js-target btn">グループ指定</button>
+            <button id="js-target-users"   class="js-target btn">ユーザ指定</button>
+            <input id="js-select-target" type="hidden" value="all" />
+          </div>
+
+
+          <section id="js-target-all-box" class="js-target-box">
+            <div style="margin-top: 25px;">
+              接続している全てのユーザに対して通知を送ります。
+            </div>
+          </section>
+
+
+
+
+          <section id="js-target-systems-box" class="js-target-box" style="display: none;">
+            <label>
+              [条件] 送信対象システム名 <span style="font-size:11px; color:gray">(任意)</span><br>
+              <input id="js-systems" type="text" name="systems" value=""  placeholder="careSystem"><br>
+              <span style="color:gray; font-size:10px;">※ ,で区切ると複数件指定することが出来ます。ex) careSystem, defaults</span>
+            </label>
+          </section>
+
+          <section id="js-target-groups-box" class="js-target-box" style="display: none;">
+            <label>
+              [条件] 送信対象グループ <span style="font-size:11px; color:gray">(任意)</span><br>
+              <input id="js-groups" type="text" name="groups" value="" placeholder="unitA"><br>
+              <span style="color:gray; font-size:10px;">※ ,で区切ると複数件指定することが出来ます。ex) unitA, unitB</span>
+            </label>
+          </section>
+
+          <section id="js-target-users-box" class="js-target-box" style="display: none;">
+
+            <label>
+              [条件] 送信対象ユーザ <span style="font-size:11px; color:gray">(任意)</span><br>
+              <input id="js-users" type="text" name="users" value="" placeholder=""><br>
+              <span style="color:gray; font-size:10px;">※ ,で区切ると複数件指定することが出来ます。ex) AAA,BBB</span>
+            </label>
+          </section>
+        </div>
+
+        <div class="span6">
+          <h4>送信するメッセージ</h4>
+          <label style="margin-top:59px;">
+            送信するメッセージ <span style="font-size:11px; color:red">(必須)</span><br>
+            <input id="js-message" type="text" name="message" value='{"status": 200}' placeholder=""><br>
+            <span style="color:gray; font-size:10px;">※ Json形式で記載してください。</span>
+          </label>
+        </div>
+      </div>
+    
+
+      <button id="js-send-message" class="btn btn-success submit-btn">通知を送信する</button>
+      <br>
+      <span style="color:gray; font-size:10px;">※ 空の場合は全件で送信されますで区切ると複数件指定することが出来ます。ex) careSystem, defaults</span>
+    </section>
+
+    <h2>接続中のユーザ一覧</h2>
+
+    <table id="js-connect-list" class="table table-striped">
+      <thead>
+        <tr>
+          <th>Socket ID</th>
+          <th>システム名</th>
+          <th>ユーザID：</th>
+          <th>所属グループ</th>
+        </tr>
+      </thead>
+      <tbody id="js-connect-list-user">
+        <tr>
+          <td>A</td>
+          <td>B</td>
+          <td>C</td>
+          <td>D</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p id="js-connect-message">
+      現在接続中のユーザはいません
+    </p>
+
+
+    <script src="/js/jquery-3.2.1.min.js"></script>
+
+    <!-- Install WebScoket Client -->
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/js/websocket_client.js"></script>
+    <script>
+      var obj = {
+        userId: 'Admin01',
+        groups: ['Admin']
+      };
+
+      // === ここから共通処理 ===
+      var client = new BrightVieWebSocketClient();
+      client.setOptions(obj);
+      // WebSocketのコネクションを貼る
+      var webSocket = client.getInstance();
+      // === ここまで共通処理 ===
+
+      // === ここからアプリケーションに合わせた処理を記載 ===
+      webSocket.on('notification_user_list', function(list) {
+        console.log(list);
+        if (list.length > 0) {
+          $('#js-connect-message').hide();
+          $('#js-connect-list').show();
+
+          $('#js-connect-list-user').empty();
+          list.forEach(function(user) {
+            var dom = '<tr><td>' + user.socketId + '</td><td>' + user.systemName + '</td><td>' + user.userId + '</td><td>' + user.groups.join(',') + '</td></tr>';
+            $('#js-connect-list-user').append(dom);
+          });
+        } else {
+          $('#js-connect-message').show();
+          $('#js-connect-list').hide();
+        }
+      });
+
+      // サーバからのメッセージを受信する
+      webSocket.on('notification', function(res) {
+        console.log('サーバからのメッセージを受信');
+        console.log(res);
+      });
+
+      $('#js-send-message').click(function() {
+        console.log('クリック');
+
+        var type = $('#js-select-target').val();
+
+        var _target;
+        if (type === 'system') {
+          _target = $('#js-systems').val();
+        } else if (type === 'group') {
+          _target = $('#js-groups').val();
+        } else if (type === 'user') {
+          _target = $('#js-users').val();
+        }
+        var target  = (_target)?_target.split(','):[];
+
+        var message = $('#js-message').val();
+
+        console.log(target);
+        console.log(target);
+        console.log(message);
+
+        var obj = {
+          type: type,
+          target: target,
+          message: message
+        };
+
+        fetch('/notification', {
+          method: 'post',
+          headers: {
+            'Accept': 'application/json, text/plain, */*',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(obj)
+        }).then(res=>res.json())
+        .then(res => {
+          console.log(res);
+          if (res.statusCode === 200) {
+            alert(res.message);
+          } else {
+            alert('[連携失敗]' + res.message);
+          }
+        });
+
+        return false;
+      });
+
+
+
+      // タブの切替処理
+      $('#js-target-all').click(function() {
+        $('.js-target-box').hide();
+        $('#js-target-all-box').show();
+
+        // 選択欄のactiveフラグのセット
+        $('.js-target').removeClass('active');
+        $(this).addClass('active');
+
+        // 送信タイプをセット
+        $('#js-select-target').val('all');
+      });
+
+      $('#js-target-systems').click(function() {
+        $('.js-target-box').hide();
+        $('#js-target-systems-box').show();
+
+        // 選択欄のactiveフラグのセット
+        $('.js-target').removeClass('active');
+        $(this).addClass('active');
+
+        // 送信タイプをセット
+        $('#js-select-target').val('system');
+      });
+
+      $('#js-target-groups').click(function() {
+        $('.js-target-box').hide();
+        $('#js-target-groups-box').show();
+
+        // 選択欄のactiveフラグのセット
+        $('.js-target').removeClass('active');
+        $(this).addClass('active');
+
+        // 送信タイプをセット
+        $('#js-select-target').val('group');
+      });
+
+      $('#js-target-users').click(function() {
+        $('.js-target-box').hide();
+        $('#js-target-users-box').show();
+
+        // 選択欄のactiveフラグのセット
+        $('.js-target').removeClass('active');
+        $(this).addClass('active');
+
+        // 送信タイプをセット
+        $('#js-select-target').val('user');
+      });
+    </script>
+  </body>
+</html>
