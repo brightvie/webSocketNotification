@@ -53,10 +53,16 @@ class WebSocketNotification {
     // 送信用のメッセージの設定
     var sendMessage = {};
     if (req.body.message) {
-      try {
-        sendMessage.message = JSON.parse(req.body.message);
-      } catch(e) {
-        res.send({statusCode: 500, message: 'JSONを解析出来ませんでした', target: target}, 500);
+
+      // 文字列だったらJSONに置き換える
+      if (typeof req.body.message === "string") {
+        try {
+          sendMessage.message = JSON.parse(req.body.message);
+        } catch(e) {
+          res.send({statusCode: 500, message: 'JSONを解析出来ませんでした', target: target}, 500);
+        }
+      } else {
+        sendMessage.message = req.body.message;
       }
     };
 
