@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies":{
-     "websocket-notification":"git@github.com:brightvie/webSocketNotification.git"
+     "websocket-notification":"https://github.com/brightvie/webSocketNotification.git"
   },
   "author": "",
   "license": "ISC"
