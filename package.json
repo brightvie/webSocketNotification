@@ -5,7 +5,7 @@
   "private":true,
   "repository": {
     "type": "git",
-    "url": "git@github.com:brightvie/webSocketNotification.git"
+    "url": "https://github.com/brightvie/webSocketNotification.git"
   },
   "license": "MIT",
   "main": "src/server/index.js",
